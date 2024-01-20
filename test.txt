@@ -1,0 +1,195 @@
+$ pwd
+$ cd ..
+$ pwd
+$ cd ../../
+$ pwd
+$ cd /Documents
+$ cd Documents
+$ cd Labs
+$ cd team-2-lab1
+$ pwd
+$
+$
+$
+$
+$
+$ pwd
+$ cd invalid
+$ cd invalid 2
+$ cd
+$ pwd
+$ cd Documents
+$ ls
+$ cd Labs
+$ ls
+$ cd team-2-lab1
+$ ls
+$ echo $?
+$ pwd 2
+$ echo $?
+$ shell56
+$ ./shell56
+$ exit 5
+$ echo $?
+$ exit 1 2
+exit : too many arguments
+$ echo $?
+$ exit 1
+$ echo a b
+$ exit 5 4
+$ echo $?
+$
+$ exit 12 11
+exit : too many arguments
+$ echo $?
+$
+$ this-is-not-a-command
+$ ./this-is-not
+$ ls
+$ echo a b c
+$ /bin/ls
+$ /bin/echo foo
+$
+$ true
+$ echo $?
+$ false
+$ echo $?
+$ sh -c 'exit 7'
+$ echo $?
+$ not-a-command
+$ echo $?
+$
+$ echo "Hello World" | tr '[:lower:]' '[:upper:]'
+$ cat /etc/passwd | cut -d: -f1 | sort
+$ echo "The quick brown fox" | tr '[:space:]' '\n' | sort | uniq -c
+$ echo "apple banana cherry date" | tr ' ' '\n' | sort | uniq -c | sort -n
+$ echo "apple banana cherry date elderberry fig" | tr ' ' '\n' | sort | uniq -c | sort -n | tail -n 2 | sed 's/ *[0-9]* //'
+$ echo "apple banana cherry date elderberry fig grape" | tr ' ' '\n' | sort | uniq -c | sort -n | tail -n 3 | sed 's/ *[0-9]* //' | tr '[:lower:]' '[:upper:]'
+$ echo "apple banana cherry date elderberry fig grape honeydew" | tr ' ' '\n' | sort | uniq -c | sort -n | tail -n 4 | sed 's/ *[0-9]* //' | tr '[:lower:]' '[:upper:]' | grep -v "D"
+-------------------STEP 4 and STEP 5 TESTING-------------------------------
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > tmp </dev/null
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > tmp <<EOF
+false | | true
+false < | | true
+true > < | false > | true
+true > < | false > | true>
+cat < /dev/null > | true
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo foo > tmpfile
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56>output <<EOF
+> cat < tmpfile
+> EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output
+foo
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$
+
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > output <<EOF
+echo bar > output2
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output2
+bar
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > output <<EOF
+echo foo | awk '{print \$1}' > output2
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output2
+foo
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > output <<"EOF"
+false | true
+echo $?
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output
+0
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > output <<"EOF"
+true | false
+echo $?
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output
+1
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo zzz > output2
+./shell56 <<EOF
+cat < output2 | cat > output
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output
+zzz
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 > output <<EOF
+cat < /not-a-real-file
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 >& output <<'EOF'
+cd
+echo $?
+pwd
+cd /tmp
+echo $?
+pwd
+cd /not-a-directory
+echo $?
+cd a b
+echo $?
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output
+0
+0
+cd: No such file or directory
+1
+cd: wrong number of arguments
+1
+/home/cs5600
+/tmp
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 >& output <<'EOF'
+echo bar bat | cat | sed s/x/y/
+echo foo bar | cat | sed s/x/y/ | cat
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ echo $?
+0
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ cat output
+bar bat
+foo bar
+
+
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$ ./shell56 >& output <<'EOF'
+|
+| |
+| | true
+EOF
+cs5600@CS5600-VM:~/Documents/Labs/team-2-lab1$
+
+
+
+
+
